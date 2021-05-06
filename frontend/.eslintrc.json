@@ -17,6 +17,7 @@
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
     "indent": ["error", 2],
-    "no-use-before-define": "warn"
+    "no-use-before-define": "warn",
+    "no-unused-vars": "warn"
   }
 }
