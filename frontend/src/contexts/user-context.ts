@@ -1,6 +1,10 @@
 import React from 'react'
 
-export type LoginType = 'INSIDER' | 'OUTSIDER_W_TF' | 'OUTSIDER_WO_TF'
+export enum LoginType {
+  INSIDER = 'INSIDER',
+  OUTSIDER_W_TF = 'OUTSIDER_W_TF',
+  OUTSIDER_WO_TF = 'OUTSIDER_WO_TF',
+}
 
 export type UserContextType = {
   user: UserType

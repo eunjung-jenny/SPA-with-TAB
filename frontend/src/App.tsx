@@ -16,13 +16,13 @@ function App(): JSX.Element {
   const [user, setUser] = React.useState<UserType>(initialUserContextValue.user)
 
   const login = (type: LoginType) => () => {
-    if (type === 'INSIDER') {
+    if (type === LoginType.INSIDER) {
       setUser({ authorized: true, isInside: true })
     }
-    if (type === 'OUTSIDER_WO_TF') {
+    if (type === LoginType.OUTSIDER_WO_TF) {
       setUser({ authorized: true, isInside: false, passTwoFactor: false })
     }
-    if (type === 'OUTSIDER_W_TF') {
+    if (type === LoginType.OUTSIDER_W_TF) {
       setUser({ authorized: true, isInside: false, passTwoFactor: true })
     }
   }

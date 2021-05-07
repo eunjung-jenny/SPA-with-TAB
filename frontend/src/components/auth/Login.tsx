@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { UserContextType } from '../../contexts/user-context'
+import { LoginType, UserContextType } from '../../contexts/user-context'
 import MyButton from '../antd/MyButton'
 
 const Container = styled.ul`
@@ -21,15 +21,15 @@ const Login: React.FC<Props> = (props: Props) => {
   return (
     <Container className="login">
       <li>
-        <MyButton onClick={login('INSIDER')}>내부자로 로그인</MyButton>
+        <MyButton onClick={login(LoginType.INSIDER)}>내부자로 로그인</MyButton>
       </li>
       <li>
-        <MyButton onClick={login('OUTSIDER_WO_TF')}>
+        <MyButton onClick={login(LoginType.OUTSIDER_WO_TF)}>
           외부자로 로그인 (two factor x)
         </MyButton>
       </li>
       <li>
-        <MyButton onClick={login('OUTSIDER_W_TF')}>
+        <MyButton onClick={login(LoginType.OUTSIDER_W_TF)}>
           외부자로 로그인 (two factor o)
         </MyButton>
       </li>
