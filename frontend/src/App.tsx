@@ -1,28 +1,28 @@
 import 'antd/dist/antd.css'
 import React from 'react'
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import './App.css'
 import Header from './components/layout/Header'
+import UserContext, { initialUserContextValue } from './contexts/user-context'
 import Auth from './pages/Auth'
 import Home from './pages/Home'
 
 function App(): JSX.Element {
   return (
-    <div className="App">
-      <Router>
-        <Header />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/auth" component={Auth} />
-          <Redirect path="*" to="/" />
-        </Switch>
-      </Router>
-    </div>
+    <UserContext.Provider value={initialUserContextValue}>
+      <div className="App">
+        <Router>
+          <UserContext.Consumer>
+            {(context) => (
+              <>
+                <Header {...context} />
+                {context.user.authorized ? <Home /> : <Auth />}
+              </>
+            )}
+          </UserContext.Consumer>
+        </Router>
+      </div>
+    </UserContext.Provider>
   )
 }
 
