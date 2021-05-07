@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import Nav from '../components/layout/Nav'
 
@@ -10,6 +11,12 @@ const Container = styled.div`
 `
 
 const Home: React.FC = () => {
+  const history = useHistory()
+
+  React.useEffect(() => {
+    history.push('/')
+  }, [])
+
   return (
     <Container className="home">
       <Nav
