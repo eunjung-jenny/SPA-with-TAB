@@ -1,8 +1,10 @@
 import React from 'react'
 
+export type LoginType = 'INSIDER' | 'OUTSIDER_W_TF' | 'OUTSIDER_WO_TF'
+
 export type UserContextType = {
   user: UserType
-  login: (user: UserType) => void
+  login: (loginType: LoginType) => () => void
   logout: () => void
 }
 
@@ -27,7 +29,7 @@ export type OutsideUserType = {
 
 export const initialUserContextValue: UserContextType = {
   user: { authorized: false },
-  login: () => {},
+  login: () => () => {},
   logout: () => {},
 }
 
