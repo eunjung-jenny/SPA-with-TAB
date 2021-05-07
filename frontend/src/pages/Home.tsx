@@ -1,7 +1,9 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import Main from '../components/layout/Main'
 import Nav from '../components/layout/Nav'
+import TabContext from '../contexts/tab-context'
 import { AuthorizedUserType } from '../contexts/user-context'
 
 const Container = styled.div`
@@ -25,18 +27,20 @@ const Home: React.FC<Props> = (props: Props) => {
   }, [])
 
   return (
-    <Container className="home">
-      <Nav
-        user={user}
-        navStyle={{ maxWidth: '250px' }}
-        menuStyle={{ minHeight: '100vh' }}
-      />
-      <div
-        style={{ width: '100%', padding: '10px', backgroundColor: '#f9f9e1' }}
-      >
-        화면
-      </div>
-    </Container>
+    <TabContext.Consumer>
+      {(context) => (
+        <Container className="home">
+          <Nav
+            user={user}
+            navStyle={{ maxWidth: '250px' }}
+            menuStyle={{ minHeight: '100vh' }}
+          />
+          <Main tabContext={context} style={{ width: '100%' }}>
+            화면
+          </Main>
+        </Container>
+      )}
+    </TabContext.Consumer>
   )
 }
 
