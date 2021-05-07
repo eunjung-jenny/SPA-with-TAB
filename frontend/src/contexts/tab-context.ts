@@ -19,9 +19,16 @@ export type TabContextType = {
   setCurrentTab: (id: string) => () => void
 }
 
+const testTabId = 'test'
+const testTab = {
+  id: testTabId,
+  menu: MenuType.Board,
+  url: `/${MenuType.Board}`,
+}
+
 export const initialTabContextValue: TabContextType = {
-  tabs: [],
-  tabHistory: [],
+  tabs: [testTab],
+  tabHistory: [testTabId],
   addTab: () => () => {},
   updateTab: () => () => {},
   currentTab: () => () => null,

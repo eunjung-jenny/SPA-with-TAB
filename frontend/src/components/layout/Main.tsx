@@ -1,6 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import MENU_CONFIGS from '../../config/menu'
 import { TabContextType } from '../../contexts/tab-context'
+import { getTabTitle } from '../../utils/menu-tab'
+import MyTabPane from '../antd/MyTabPane'
+import MyTabs from '../antd/MyTabs'
 
 type Props = {
   tabContext: TabContextType
@@ -9,17 +13,29 @@ type Props = {
 
 const Container = styled.div`
   &.main {
-    padding: 10px;
+    padding: 2px;
     background-color: #f9f9e1;
   }
 `
 
 const Main: React.FC<Props> = (props: Props) => {
-  const { tabContext, style } = props
+  const {
+    tabContext: { tabs, tabHistory },
+    style,
+  } = props
 
   return (
     <Container className="main" style={style}>
-      메인
+      <MyTabs type="card" activeKey={tabHistory[tabHistory.length - 1]}>
+        {tabs.map((tab) => {
+          const Component = MENU_CONFIGS[tab.menu].component
+          return (
+            <MyTabPane tab={getTabTitle(tab.menu)} key={tab.id}>
+              <Component />
+            </MyTabPane>
+          )
+        })}
+      </MyTabs>
     </Container>
   )
 }
