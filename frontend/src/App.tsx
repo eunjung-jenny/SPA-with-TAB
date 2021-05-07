@@ -10,6 +10,7 @@ import UserContext, {
 } from './contexts/user-context'
 import Auth from './pages/Auth'
 import Home from './pages/Home'
+import { loginCompleted } from './utils/auth'
 
 function App(): JSX.Element {
   const [user, setUser] = React.useState<UserType>(initialUserContextValue.user)
@@ -38,7 +39,7 @@ function App(): JSX.Element {
             {(context) => (
               <>
                 <Header {...context} />
-                {context.user.authorized ? <Home /> : <Auth />}
+                {loginCompleted(context.user) ? <Home /> : <Auth />}
               </>
             )}
           </UserContext.Consumer>
