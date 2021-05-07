@@ -6,6 +6,11 @@ export enum LoginType {
   OUTSIDER_WO_TF = 'OUTSIDER_WO_TF',
 }
 
+export enum UserCategoryType {
+  Insider = 'Insider',
+  Outsider = 'Outsider',
+}
+
 export type UserContextType = {
   user: UserType
   login: (loginType: LoginType) => () => void

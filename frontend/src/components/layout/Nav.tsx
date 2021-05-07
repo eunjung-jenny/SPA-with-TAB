@@ -1,6 +1,9 @@
 import { Menu } from 'antd'
 import React from 'react'
 import styled from 'styled-components'
+import MENU_CONFIGS from '../../config/menu'
+import { AuthorizedUserType } from '../../contexts/user-context'
+import { userCategory } from '../../utils/auth'
 import MyMenu from '../antd/MyMenu'
 
 const { Item } = Menu
@@ -11,6 +14,7 @@ const Container = styled.div`
 `
 
 type Props = {
+  user: AuthorizedUserType
   navStyle?: React.CSSProperties
   menuStyle?: React.CSSProperties
 }
@@ -26,9 +30,16 @@ const Nav = (props: Props) => {
         mode="inline"
         style={menuStyle}
       >
-        <Item key="1">Option 1</Item>
-        <Item key="2">Option 2</Item>
-        <Item key="3">Option 3</Item>
+        {Object.entries(MENU_CONFIGS)
+          .filter(([menu, menuConfig]) => {
+            return (
+              menuConfig.allowed.includes(userCategory(props.user)) &&
+              !menuConfig.hidden
+            )
+          })
+          .map(([menu, menuConfig]) => (
+            <Item key={menu}>{menuConfig.menuString}</Item>
+          ))}
       </MyMenu>
     </Container>
   )

@@ -39,7 +39,11 @@ function App(): JSX.Element {
             {(context) => (
               <>
                 <Header {...context} />
-                {loginCompleted(context.user) ? <Home /> : <Auth />}
+                {loginCompleted(context.user) ? (
+                  <Home user={context.user} />
+                ) : (
+                  <Auth />
+                )}
               </>
             )}
           </UserContext.Consumer>

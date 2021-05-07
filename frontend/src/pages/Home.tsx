@@ -2,6 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import Nav from '../components/layout/Nav'
+import { AuthorizedUserType } from '../contexts/user-context'
 
 const Container = styled.div`
   &.home {
@@ -10,8 +11,14 @@ const Container = styled.div`
   }
 `
 
-const Home: React.FC = () => {
+type Props = {
+  user: AuthorizedUserType
+}
+
+const Home: React.FC<Props> = (props: Props) => {
   const history = useHistory()
+
+  const { user } = props
 
   React.useEffect(() => {
     history.push('/')
@@ -20,6 +27,7 @@ const Home: React.FC = () => {
   return (
     <Container className="home">
       <Nav
+        user={user}
         navStyle={{ maxWidth: '250px' }}
         menuStyle={{ minHeight: '100vh' }}
       />
