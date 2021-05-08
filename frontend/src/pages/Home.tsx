@@ -33,6 +33,7 @@ const Home: React.FC<Props> = (props: Props) => {
           user={user}
           navStyle={{ maxWidth: '250px' }}
           menuStyle={{ minHeight: '100vh' }}
+          tabContext={initialTabContextValue}
         />
         <Main tabContext={initialTabContextValue} style={{ width: '100%' }}>
           화면

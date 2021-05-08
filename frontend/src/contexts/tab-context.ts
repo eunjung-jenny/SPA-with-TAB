@@ -1,30 +1,19 @@
 import React from 'react'
+import TabModel, { TabModelType } from '../models/TabModel'
 import { MenuType } from '../types/menu'
 
-export type TabType = {
-  id: string
-  menu: MenuType
-  url: string
-  isEditing?: boolean
-  error?: boolean
-}
-
 export type TabContextType = {
-  tabs: TabType[]
+  tabs: TabModel[]
   tabHistory: string[]
   addTab: (menu: MenuType) => () => void
-  updateTab: (menu: MenuType) => (tab: Partial<TabType>) => void
-  currentTab: () => () => TabType | null
+  updateTab: (menu: MenuType) => (tab: Partial<TabModelType>) => void
+  currentTab: () => () => TabModelType | null
   removeTab: (id: string) => () => void
   setCurrentTab: (id: string) => () => void
 }
 
 const testTabId = 'test'
-const testTab = {
-  id: testTabId,
-  menu: MenuType.Board,
-  url: `/${MenuType.Board}`,
-}
+const testTab = new TabModel(MenuType.Board)
 
 export const initialTabContextValue: TabContextType = {
   tabs: [testTab],
