@@ -14,7 +14,7 @@ type Props = {
 const Container = styled.div`
   &.main {
     padding: 2px;
-    background-color: #f9f9e1;
+    background-color: #f8feff;
   }
 `
 

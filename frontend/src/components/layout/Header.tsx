@@ -26,7 +26,7 @@ const Header: React.FC<Props> = (props: Props) => {
     <MyPageHeader
       title="SPA-W-TABS"
       extra={[userInfo(), userAction]}
-      style={{ backgroundColor: 'burlywood' }}
+      style={{ backgroundColor: '#c4dce1' }}
     />
   )
 }
