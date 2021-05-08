@@ -10,7 +10,7 @@ export type TabModelType = {
 }
 
 export default class TabModel {
-  public readonly data: TabModelType
+  private data: TabModelType
 
   constructor(menu: MenuType) {
     this.data = {
@@ -20,5 +20,13 @@ export default class TabModel {
       isEditing: false,
       error: false,
     }
+  }
+
+  get info(): TabModelType {
+    return this.data
+  }
+
+  updateTab(params: Partial<Omit<TabModelType, 'id' | 'menu'>>): void {
+    this.data = { ...this.data, ...params }
   }
 }

@@ -6,7 +6,6 @@ export type TabContextType = {
   tabs: TabModel[]
   tabHistory: string[]
   addTab: (menu: MenuType) => () => void
-  updateTab: (menu: MenuType) => (tab: Partial<TabModelType>) => void
   currentTab: () => () => TabModelType | null
   removeTab: (id: string) => () => void
   setCurrentTab: (id: string) => () => void
@@ -19,7 +18,6 @@ export const initialTabContextValue: TabContextType = {
   tabs: [testTab],
   tabHistory: [testTabId],
   addTab: () => () => {},
-  updateTab: () => () => {},
   currentTab: () => () => null,
   removeTab: () => () => {},
   setCurrentTab: () => () => {},
