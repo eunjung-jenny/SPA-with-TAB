@@ -5,6 +5,7 @@ import MENU_CONFIGS from '../../config/menu'
 import { TabContextType } from '../../contexts/tab-context'
 import { AuthorizedUserType } from '../../contexts/user-context'
 import { userCategory } from '../../utils/auth'
+import { lastOfArr } from '../../utils/common'
 import MyMenu from '../antd/MyMenu'
 
 const { Item } = Menu
@@ -27,8 +28,7 @@ const Nav = (props: Props) => {
   return (
     <Container className="nav" style={navStyle}>
       <MyMenu
-        defaultSelectedKeys={[]}
-        defaultOpenKeys={[]}
+        selectedKeys={[lastOfArr(tabContext.tabs).info.menu]}
         mode="inline"
         style={menuStyle}
       >
