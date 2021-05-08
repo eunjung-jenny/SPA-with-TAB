@@ -24,7 +24,11 @@ const Main: React.FC<Props> = (props: Props) => {
 
   return (
     <Container className="main" style={style}>
-      <MyTabs type="card" activeKey={tabHistory[tabHistory.length - 1]}>
+      <MyTabs
+        type="card"
+        activeKey={tabHistory[tabHistory.length - 1]}
+        onChange={(activeKey) => tabContext.setCurrentTab(activeKey)}
+      >
         {tabs.map((tab) => {
           const Component = MENU_CONFIGS[tab.info.menu].component
           return (
