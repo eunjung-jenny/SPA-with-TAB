@@ -3,8 +3,9 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import Main from '../components/layout/Main'
 import Nav from '../components/layout/Nav'
-import TabContext, { initialTabContextValue } from '../contexts/tab-context'
 import { AuthorizedUserType } from '../contexts/user-context'
+import TabContextModel from '../models/TabContextModel'
+import TabModel from '../models/TabModel'
 
 const Container = styled.div`
   &.home {
@@ -19,12 +20,25 @@ type Props = {
 
 const Home: React.FC<Props> = (props: Props) => {
   const history = useHistory()
+  const [tabs, setTabs] = React.useState<TabModel[]>([])
+  const [tabHistory, setTabHistory] = React.useState<string[]>([])
 
   const { user } = props
 
   React.useEffect(() => {
     history.push('/')
   }, [])
+
+  const initialTabContextValue = new TabContextModel({
+    tabs,
+    setTabs,
+    tabHistory,
+    setTabHistory,
+  })
+
+  const TabContext = React.createContext<TabContextModel>(
+    initialTabContextValue,
+  )
 
   return (
     <TabContext.Provider value={initialTabContextValue}>

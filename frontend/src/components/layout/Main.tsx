@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import MENU_CONFIGS from '../../config/menu'
-import { TabContextType } from '../../contexts/tab-context'
+import TabContextModel from '../../models/TabContextModel'
 import { getTabTitle } from '../../utils/menu-tab'
 import MyTabPane from '../antd/MyTabPane'
 import MyTabs from '../antd/MyTabs'
 
 type Props = {
-  tabContext: TabContextType
+  tabContext: TabContextModel
   style?: React.CSSProperties
 }
 
@@ -19,10 +19,8 @@ const Container = styled.div`
 `
 
 const Main: React.FC<Props> = (props: Props) => {
-  const {
-    tabContext: { tabs, tabHistory },
-    style,
-  } = props
+  const { tabContext, style } = props
+  const { tabs, tabHistory } = tabContext.info
 
   return (
     <Container className="main" style={style}>
