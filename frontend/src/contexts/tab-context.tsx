@@ -46,17 +46,6 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     setTabs(updatedTabs)
   }
 
-  const addTabHistory = (id: string | undefined) => {
-    if (!id) return
-    if (lastOfArr(tabHistory) === id) return
-    setTabHistory([...tabHistory, id])
-  }
-
-  const addWindowHistory = (id: string | undefined) => {
-    const tab = tabsRef.current.find((tab) => tab.info.id === id)
-    history.push(tab ? tab.info.url : '')
-  }
-
   const activateTab = (id: string | undefined) => {
     if (!id) {
       setCurrentTab(null)
@@ -70,6 +59,24 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     setCurrentTab(selectedTab)
   }
 
+  const addHistory = (id: string | undefined) => {
+    const addTabHistory = (id: string | undefined) => {
+      if (!id) return
+      if (lastOfArr(tabHistory) === id) return
+      setTabHistory([...tabHistory, id])
+    }
+
+    const addWindowHistory = (id: string | undefined) => {
+      const tab = tabsRef.current.find((tab) => tab.info.id === id)
+      history.push(tab ? tab.info.url : '', { idx: tabHistory.length })
+    }
+
+    addTabHistory(id)
+    addWindowHistory(id)
+
+    activateTab(id)
+  }
+
   const handlePopState = (url: string) => (e: PopStateEvent) => {
     const tab = tabsRef.current.find((tab) => tab.info.url === url)
     activateTab(tab?.info.id)
@@ -79,39 +86,32 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     const menu = newTabParam.url.split('/')[0]
     if (!Object.keys(MENU_CONFIGS).includes(menu)) return // TODO: 경고 - 존재하지 않는 메뉴
 
-    const existingTab = tabsRef.current.find(
-      (tab) => tab.info.url === newTabParam.url,
-    )
+    let tab = tabsRef.current.find((tab) => tab.info.url === newTabParam.url)
 
-    if (existingTab) {
-      activateTab(existingTab.info.id)
-    } else {
-      const newTab = new TabModel(newTabParam)
-      updateTabs([...tabsRef.current, newTab])
-      activateTab(newTab.info.id)
-      addTabHistory(newTab.info.id)
-      addWindowHistory(newTab.info.id)
+    if (!tab) {
+      tab = new TabModel(newTabParam)
+      updateTabs([...tabsRef.current, tab])
     }
-  }
 
-  const getPreviousTabId = (removedTabId: string) => {
-    const previousTabId = tabHistory
-      .filter((id) => id !== removedTabId)
-      .reverse()
-      .find((id) => {
-        const tab = tabsRef.current.find((tab) => tab.info.id === id)
-        return tab
-      })
-
-    return previousTabId
+    addHistory(tab.info.id)
   }
 
   const removeTab = (id: string) => () => {
+    const getPreviousTabId = (removedTabId: string) => {
+      const previousTabId = tabHistory
+        .filter((id) => id !== removedTabId)
+        .reverse()
+        .find((id) => {
+          const tab = tabsRef.current.find((tab) => tab.info.id === id)
+          return tab
+        })
+
+      return previousTabId
+    }
+
     updateTabs(tabsRef.current.filter((tab) => tab.info.id !== id))
     const previousTabId = getPreviousTabId(id)
-    activateTab(previousTabId)
-    addTabHistory(previousTabId)
-    addWindowHistory(previousTabId)
+    addHistory(previousTabId)
   }
 
   return (

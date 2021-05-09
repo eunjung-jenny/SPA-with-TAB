@@ -24,7 +24,6 @@ const Main: React.FC<Props> = (props: Props) => {
 
   const handlePopState = (e: PopStateEvent) => {
     const url = window.location.pathname.substr(1)
-    console.log(url)
     tabContextValue.handlePopState(url)(e)
   }
 
