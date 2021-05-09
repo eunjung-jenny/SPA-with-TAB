@@ -2,6 +2,10 @@ import { v4 as uuid } from 'uuid'
 import MENU_CONFIGS from '../config/menu'
 import { MenuType } from '../types/menu'
 
+export type TabModelParams = {
+  menu: MenuType
+} & Partial<Omit<TabModelType, 'menu'>>
+
 export type TabModelType = {
   id: string
   menu: MenuType
@@ -13,13 +17,13 @@ export type TabModelType = {
 export default class TabModel {
   private data: TabModelType
 
-  constructor(menu: MenuType) {
+  constructor(params: TabModelParams) {
     this.data = {
-      id: uuid(),
-      menu,
-      url: menu,
-      isEditing: false,
-      error: false,
+      id: params.id ?? uuid(),
+      menu: params.menu,
+      url: params.url ?? params.menu,
+      isEditing: params.isEditing ?? false,
+      error: params.error ?? false,
     }
   }
 
