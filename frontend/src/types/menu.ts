@@ -4,6 +4,8 @@ export enum MenuType {
   MemberManagement = 'MemberManagement',
   Board = 'Board',
   Article = 'Article',
+  Test = 'Text',
+  Happy = 'Happy',
 }
 
 export type MenuConfigType = {

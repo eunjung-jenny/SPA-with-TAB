@@ -13,7 +13,17 @@ const MENU_CONFIGS: Record<MenuType, MenuConfigType> = {
   [MenuType.Article]: {
     menuString: '게시글',
     allowed: [UserCategoryType.Insider, UserCategoryType.Outsider],
-    hidden: true,
+    hidden: false,
+  },
+  [MenuType.Test]: {
+    menuString: '테스트',
+    allowed: [UserCategoryType.Insider, UserCategoryType.Outsider],
+    hidden: false,
+  },
+  [MenuType.Happy]: {
+    menuString: '행복하자',
+    allowed: [UserCategoryType.Insider, UserCategoryType.Outsider],
+    hidden: false,
   },
 }
 

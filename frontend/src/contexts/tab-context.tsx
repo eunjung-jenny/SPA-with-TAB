@@ -12,7 +12,7 @@ type TabContextProps = {
   addTab: (newTabParam: TabModelParams) => void
   removeTab: (id: string) => () => void
   handleTabTitleClick: (id: string) => void
-  handlePopState: (url: string) => (e: PopStateEvent) => void
+  handlePopState: (url: string, idx: number) => void
 }
 
 type TabContextProviderProps = {
@@ -27,7 +27,7 @@ const TabContext = React.createContext<TabContextProps>({
   addTab: (newTabParam: TabModelParams) => {},
   removeTab: (id: string) => () => {},
   handleTabTitleClick: (id: string) => {},
-  handlePopState: (url: string) => (e: PopStateEvent) => {},
+  handlePopState: (url: string, idx: number) => {},
 })
 
 const TabContextProvider = (props: TabContextProviderProps) => {
@@ -98,26 +98,27 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     activateTab(id)
   }
 
-  const handlePopState = (url: string) => (e: PopStateEvent) => {
-    const { idx } = e.state.state
-
+  const handlePopState = (url: string, idx: number) => {
     if (
       typeof currentTabHistoryIdxRef.current === 'number' &&
       typeof idx === 'number'
     ) {
-      if (idx < currentTabHistoryIdxRef.current) {
-        console.log('뒤로가기 누름')
+      const tab = tabsRef.current.find(
+        (tab) =>
+          tab.info.id === tabHistoryRef.current[idx] &&
+          tab.info.url !== currentTabRef.current?.info.url,
+      )
+      if (tab) {
+        activateTab(tab.info.id)
+        updateCurrentTabHistoryIdx(idx)
+      } else if (idx < currentTabHistoryIdxRef.current) {
+        window.history.back()
       } else if (idx > currentTabHistoryIdxRef.current) {
-        console.log('앞으로가기 누름')
+        window.history.forward()
       } else {
-        console.log('이런 경우는 없지?')
+        console.log('이 케이스는 존재하지 않습니다.')
       }
     }
-
-    updateCurrentTabHistoryIdx(idx)
-
-    const tab = tabsRef.current.find((tab) => tab.info.url === url)
-    activateTab(tab?.info.id)
   }
 
   const addTab = (newTabParam: TabModelParams) => {
@@ -134,22 +135,25 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     addHistory(tab.info.id)
   }
 
-  const removeTab = (id: string) => () => {
-    const getPreviousTabId = (removedTabId: string) => {
-      const previousTabId = tabHistory
-        .filter((id) => id !== removedTabId)
+  const removeTab = (removedId: string) => () => {
+    const getPreviousTab = () => {
+      let previousTab: TabModel | undefined
+
+      tabHistory
+        .filter((id) => id !== removedId)
         .reverse()
         .find((id) => {
           const tab = tabsRef.current.find((tab) => tab.info.id === id)
+          previousTab = tab
           return tab
         })
 
-      return previousTabId
+      return previousTab
     }
 
-    updateTabs(tabsRef.current.filter((tab) => tab.info.id !== id))
-    const previousTabId = getPreviousTabId(id)
-    addHistory(previousTabId)
+    updateTabs(tabsRef.current.filter((tab) => tab.info.id !== removedId))
+    const previousTab = getPreviousTab()
+    addHistory(previousTab?.info.id)
   }
 
   const handleTabTitleClick = (id: string) => {

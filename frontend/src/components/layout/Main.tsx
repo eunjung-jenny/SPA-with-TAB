@@ -23,8 +23,9 @@ const Main: React.FC<Props> = (props: Props) => {
   const tabContextValue = React.useContext(TabContext)
 
   const handlePopState = (e: PopStateEvent) => {
+    // TODO: 로그인까지 뒤로가기 하는 경우는?
     const url = window.location.pathname.substr(1)
-    tabContextValue.handlePopState(url)(e)
+    tabContextValue.handlePopState(url, e.state.state.idx)
   }
 
   React.useEffect(() => {
