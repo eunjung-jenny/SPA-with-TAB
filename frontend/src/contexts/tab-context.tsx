@@ -46,7 +46,12 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     setTabHistory([...tabHistory, id])
   }
 
-  const activateTab = (id: string) => {
+  const activateTab = (id: string | undefined) => {
+    if (!id) {
+      setCurrentTab(null)
+      return
+    }
+
     // TODO: 예외 - 존재하지 않는 탭
     const selectedTab = tabsRef.current.find((tab) => tab.info.id === id)
     if (!selectedTab) return
@@ -72,8 +77,22 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     }
   }
 
+  const getPreviousTabId = (removedTabId: string) => {
+    const previousTabId = tabHistory
+      .filter((id) => id !== removedTabId)
+      .reverse()
+      .find((id) => {
+        const tab = tabsRef.current.find((tab) => tab.info.id === id)
+        return tab
+      })
+
+    return previousTabId
+  }
+
   const removeTab = (id: string) => () => {
     updateTabs(tabsRef.current.filter((tab) => tab.info.id !== id))
+    // currentTab 업데이트, tabHistory 업데이트
+    activateTab(getPreviousTabId(id))
   }
 
   return (
