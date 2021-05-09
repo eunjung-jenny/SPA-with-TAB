@@ -3,8 +3,8 @@ import MENU_CONFIGS from '../config/menu'
 import { MenuType } from '../types/menu'
 
 export type TabModelParams = {
-  menu: MenuType
-} & Partial<Omit<TabModelType, 'menu'>>
+  url: string
+} & Partial<Omit<TabModelType, 'url'>>
 
 export type TabModelType = {
   id: string
@@ -20,8 +20,8 @@ export default class TabModel {
   constructor(params: TabModelParams) {
     this.data = {
       id: params.id ?? uuid(),
-      menu: params.menu,
-      url: params.url ?? params.menu,
+      menu: params.url.split('/')[0] as MenuType,
+      url: params.url,
       isEditing: params.isEditing ?? false,
       error: params.error ?? false,
     }

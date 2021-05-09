@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import MENU_CONFIGS from '../../config/menu'
-import TabContextModel from '../../models/TabContextModel'
+import { TabContextConsumer } from '../../contexts/tab-context'
 import MyTabPane from '../antd/MyTabPane'
 import MyTabs from '../antd/MyTabs'
 import TabTitle from '../TabTitle'
 
 type Props = {
-  tabContext: TabContextModel
   style?: React.CSSProperties
 }
 
@@ -19,33 +18,39 @@ const Container = styled.div`
 `
 
 const Main: React.FC<Props> = (props: Props) => {
-  const { tabContext, style } = props
-  const { tabs, tabHistory } = tabContext.info
-
-  const handleTabClose = (id: string) => () => {
-    tabContext.removeTab(id)
-  }
+  const { style } = props
 
   return (
-    <Container className="main" style={style}>
-      <MyTabs
-        type="card"
-        activeKey={tabHistory[tabHistory.length - 1]}
-        onChange={(activeKey) => tabContext.setCurrentTab(activeKey)}
-      >
-        {tabs.map((tab) => {
-          const Component = MENU_CONFIGS[tab.info.menu].component
-          return (
-            <MyTabPane
-              tab={<TabTitle tab={tab} onClose={handleTabClose} />}
-              key={tab.info.id}
+    <TabContextConsumer>
+      {(context) => {
+        return (
+          <Container className="main" style={style}>
+            <MyTabs
+              type="card"
+              activeKey={context.currentTab?.info.id}
+              onChange={(activeKey) => context.activateTab(activeKey)}
             >
-              <Component />
-            </MyTabPane>
-          )
-        })}
-      </MyTabs>
-    </Container>
+              {context.tabs.map((tab) => {
+                const Component = MENU_CONFIGS[tab.info.menu].component
+                return (
+                  <MyTabPane
+                    tab={
+                      <TabTitle
+                        tab={tab}
+                        onClose={(id: string) => context.removeTab(id)}
+                      />
+                    }
+                    key={tab.info.id}
+                  >
+                    <Component />
+                  </MyTabPane>
+                )
+              })}
+            </MyTabs>
+          </Container>
+        )
+      }}
+    </TabContextConsumer>
   )
 }
 
