@@ -40,15 +40,25 @@ const TabContextProvider = (props: TabContextProviderProps) => {
   const [currentTab, setCurrentTab] = React.useState<TabModel | null>(null)
 
   const tabsRef = React.useRef(tabs)
+  const tabHistoryRef = React.useRef(tabHistory)
+  const currentTabRef = React.useRef(currentTab)
 
   const updateTabs = (updatedTabs: TabModel[]) => {
     tabsRef.current = updatedTabs
     setTabs(updatedTabs)
   }
+  const updateTabHistory = (updatedTabHistory: string[]) => {
+    tabHistoryRef.current = updatedTabHistory
+    setTabHistory(updatedTabHistory)
+  }
+  const updateCurrentTab = (tab: TabModel | null) => {
+    currentTabRef.current = tab
+    setCurrentTab(tab)
+  }
 
   const activateTab = (id: string | undefined) => {
     if (!id) {
-      setCurrentTab(null)
+      updateCurrentTab(null)
       return
     }
 
@@ -56,19 +66,21 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     const selectedTab = tabsRef.current.find((tab) => tab.info.id === id)
     if (!selectedTab) return
 
-    setCurrentTab(selectedTab)
+    updateCurrentTab(selectedTab)
   }
 
   const addHistory = (id: string | undefined) => {
     const addTabHistory = (id: string | undefined) => {
       if (!id) return
-      if (lastOfArr(tabHistory) === id) return
-      setTabHistory([...tabHistory, id])
+      if (lastOfArr(tabHistoryRef.current) === id) return
+      updateTabHistory([...tabHistoryRef.current, id])
     }
 
     const addWindowHistory = (id: string | undefined) => {
       const tab = tabsRef.current.find((tab) => tab.info.id === id)
-      history.push(tab ? tab.info.url : '', { idx: tabHistory.length })
+      history.push(tab ? tab.info.url : '', {
+        idx: tabHistoryRef.current.length,
+      })
     }
 
     addTabHistory(id)
@@ -123,8 +135,8 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     <TabContext.Provider
       value={{
         tabs: tabsRef.current,
-        tabHistory,
-        currentTab,
+        tabHistory: tabHistoryRef.current,
+        currentTab: currentTabRef.current,
         addTab,
         removeTab,
         // activateTab,
