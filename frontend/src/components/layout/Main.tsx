@@ -53,7 +53,7 @@ const Main: React.FC<Props> = (props: Props) => {
                     }
                     key={tab.info.id}
                   >
-                    <TabContent />
+                    <TabContent tab={tab} />
                   </MyTabPane>
                 )
               })}

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { TabContext, TabContextConsumer } from '../../contexts/tab-context'
+import TabModel from '../../models/TabModel'
 import { MenuType } from '../../types/menu'
 import ArticleTab from './ArticleTab'
 import BoardTab from './BoardTab'
@@ -11,22 +11,27 @@ const Container = styled.div`
   }
 `
 
-const TabContent: React.FC = () => {
-  const [path, setPath] = React.useState(
-    React.useContext(TabContext).currentTab?.info.url ?? 'error',
-  )
+type Props = {
+  tab: TabModel
+}
+
+const TabContent: React.FC<Props> = (props: Props) => {
+  const { tab } = props
+
+  const [thisTab, setThisTab] = React.useState(tab)
+
+  console.log(`${thisTab.tabTitleString} 탭 컨텐츠 렌더링`)
+
   const [isActivated, setIsActivated] = React.useState(true)
 
   React.useEffect(() => {
-    setIsActivated(window.location.pathname.substr(1) === path)
+    setIsActivated(window.location.pathname.substr(1) === thisTab.info.url)
   }, [window.location.pathname])
 
   if (!isActivated) return null
 
   // TODO: 어디에 넣어야 하는지 고민
-  const getContent = (menu: MenuType | undefined) => {
-    if (!menu) return null
-
+  const getContent = (menu: MenuType) => {
     switch (menu) {
       case MenuType.MemberManagement: {
         return <MemberManagementTab />
@@ -44,13 +49,9 @@ const TabContent: React.FC = () => {
   }
 
   return (
-    <TabContextConsumer>
-      {(context) => (
-        <Container className="tab-content">
-          {getContent(context.currentTab?.info.menu)}
-        </Container>
-      )}
-    </TabContextConsumer>
+    <Container className="tab-content">
+      {getContent(thisTab.info.menu)}
+    </Container>
   )
 }
 
