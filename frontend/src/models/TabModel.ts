@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid'
+import MENU_CONFIGS from '../config/menu'
 import { MenuType } from '../types/menu'
 
 export type TabModelType = {
@@ -24,6 +25,10 @@ export default class TabModel {
 
   get info(): TabModelType {
     return this.data
+  }
+
+  get tabTitleString(): string {
+    return MENU_CONFIGS[this.data.menu].menuString
   }
 
   updateTab(params: Partial<Omit<TabModelType, 'id' | 'menu'>>): void {

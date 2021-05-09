@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import MENU_CONFIGS from '../../config/menu'
 import TabContextModel from '../../models/TabContextModel'
-import { getTabTitle } from '../../utils/menu-tab'
 import MyTabPane from '../antd/MyTabPane'
 import MyTabs from '../antd/MyTabs'
+import TabTitle from '../TabTitle'
 
 type Props = {
   tabContext: TabContextModel
@@ -22,6 +22,10 @@ const Main: React.FC<Props> = (props: Props) => {
   const { tabContext, style } = props
   const { tabs, tabHistory } = tabContext.info
 
+  const handleTabClose = (id: string) => () => {
+    tabContext.removeTab(id)
+  }
+
   return (
     <Container className="main" style={style}>
       <MyTabs
@@ -32,7 +36,10 @@ const Main: React.FC<Props> = (props: Props) => {
         {tabs.map((tab) => {
           const Component = MENU_CONFIGS[tab.info.menu].component
           return (
-            <MyTabPane tab={getTabTitle(tab.info.menu)} key={tab.info.id}>
+            <MyTabPane
+              tab={<TabTitle tab={tab} onClose={handleTabClose} />}
+              key={tab.info.id}
+            >
               <Component />
             </MyTabPane>
           )
