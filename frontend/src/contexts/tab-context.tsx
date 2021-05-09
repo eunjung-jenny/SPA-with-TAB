@@ -38,10 +38,14 @@ const TabContextProvider = (props: TabContextProviderProps) => {
   const [tabs, setTabs] = React.useState<TabModel[]>([])
   const [tabHistory, setTabHistory] = React.useState<string[]>([])
   const [currentTab, setCurrentTab] = React.useState<TabModel | null>(null)
+  const [currentTabHistoryIdx, setCurrentTabHistoryIdx] = React.useState<
+    number | undefined
+  >(undefined)
 
   const tabsRef = React.useRef(tabs)
   const tabHistoryRef = React.useRef(tabHistory)
   const currentTabRef = React.useRef(currentTab)
+  const currentTabHistoryIdxRef = React.useRef(currentTabHistoryIdx)
 
   const updateTabs = (updatedTabs: TabModel[]) => {
     tabsRef.current = updatedTabs
@@ -54,6 +58,10 @@ const TabContextProvider = (props: TabContextProviderProps) => {
   const updateCurrentTab = (tab: TabModel | null) => {
     currentTabRef.current = tab
     setCurrentTab(tab)
+  }
+  const updateCurrentTabHistoryIdx = (idx: number | undefined) => {
+    currentTabHistoryIdxRef.current = idx
+    setCurrentTabHistoryIdx(idx)
   }
 
   const activateTab = (id: string | undefined) => {
@@ -79,17 +87,35 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     const addWindowHistory = (id: string | undefined) => {
       const tab = tabsRef.current.find((tab) => tab.info.id === id)
       history.push(tab ? tab.info.url : '', {
-        idx: tabHistoryRef.current.length,
+        idx: tabHistoryRef.current.length - 1,
       })
     }
 
     addTabHistory(id)
     addWindowHistory(id)
+    updateCurrentTabHistoryIdx(tabHistoryRef.current.length - 1)
 
     activateTab(id)
   }
 
   const handlePopState = (url: string) => (e: PopStateEvent) => {
+    const { idx } = e.state.state
+
+    if (
+      typeof currentTabHistoryIdxRef.current === 'number' &&
+      typeof idx === 'number'
+    ) {
+      if (idx < currentTabHistoryIdxRef.current) {
+        console.log('뒤로가기 누름')
+      } else if (idx > currentTabHistoryIdxRef.current) {
+        console.log('앞으로가기 누름')
+      } else {
+        console.log('이런 경우는 없지?')
+      }
+    }
+
+    updateCurrentTabHistoryIdx(idx)
+
     const tab = tabsRef.current.find((tab) => tab.info.url === url)
     activateTab(tab?.info.id)
   }

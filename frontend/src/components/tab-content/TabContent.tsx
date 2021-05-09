@@ -20,8 +20,6 @@ const TabContent: React.FC<Props> = (props: Props) => {
 
   const [thisTab, setThisTab] = React.useState(tab)
 
-  console.log(`${thisTab.tabTitleString} 탭 컨텐츠 렌더링`)
-
   const [isActivated, setIsActivated] = React.useState(true)
 
   React.useEffect(() => {
@@ -29,6 +27,8 @@ const TabContent: React.FC<Props> = (props: Props) => {
   }, [window.location.pathname])
 
   if (!isActivated) return null
+
+  console.log(`${thisTab.tabTitleString} 탭 컨텐츠 렌더링`)
 
   // TODO: 어디에 넣어야 하는지 고민
   const getContent = (menu: MenuType) => {
