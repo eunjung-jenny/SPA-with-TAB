@@ -15,8 +15,13 @@ const TabContent: React.FC = () => {
   const [path, setPath] = React.useState(
     React.useContext(TabContext).currentTab?.info.url ?? 'error',
   )
+  const [isActivated, setIsActivated] = React.useState(true)
 
-  if (path === window.location.pathname.substr(1)) return null
+  React.useEffect(() => {
+    setIsActivated(window.location.pathname.substr(1) === path)
+  }, [window.location.pathname])
+
+  if (!isActivated) return null
 
   // TODO: 어디에 넣어야 하는지 고민
   const getContent = (menu: MenuType | undefined) => {
