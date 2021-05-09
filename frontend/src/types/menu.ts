@@ -10,5 +10,4 @@ export type MenuConfigType = {
   menuString: string
   allowed: UserCategoryType[]
   hidden?: boolean
-  component: React.FC<any>
 }

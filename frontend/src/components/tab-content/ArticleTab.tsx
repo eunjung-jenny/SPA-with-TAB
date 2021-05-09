@@ -1,8 +1,7 @@
 import React from 'react'
-import TabContent from './TabContent'
 
 const ArticleTab: React.FC = () => {
-  return <TabContent>ArticleTab</TabContent>
+  return <div>ArticleTab</div>
 }
 
 export default ArticleTab

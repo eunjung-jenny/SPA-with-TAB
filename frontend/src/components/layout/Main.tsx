@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import MENU_CONFIGS from '../../config/menu'
 import { TabContextConsumer } from '../../contexts/tab-context'
 import MyTabPane from '../antd/MyTabPane'
 import MyTabs from '../antd/MyTabs'
+import TabContent from '../tab-content/TabContent'
 import TabTitle from '../TabTitle'
 
 type Props = {
@@ -31,7 +31,6 @@ const Main: React.FC<Props> = (props: Props) => {
               onChange={(activeKey) => context.activateTab(activeKey)}
             >
               {context.tabs.map((tab) => {
-                const Component = MENU_CONFIGS[tab.info.menu].component
                 return (
                   <MyTabPane
                     tab={
@@ -42,7 +41,7 @@ const Main: React.FC<Props> = (props: Props) => {
                     }
                     key={tab.info.id}
                   >
-                    <Component />
+                    <TabContent />
                   </MyTabPane>
                 )
               })}

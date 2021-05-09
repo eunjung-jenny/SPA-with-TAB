@@ -1,8 +1,7 @@
 import React from 'react'
-import TabContent from './TabContent'
 
 const MemberManagementTab: React.FC = () => {
-  return <TabContent>MemberManagementTab</TabContent>
+  return <div>MemberManagementTab</div>
 }
 
 export default MemberManagementTab

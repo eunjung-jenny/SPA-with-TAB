@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import MENU_CONFIGS from '../config/menu'
 import TabModel, { TabModelParams } from '../models/TabModel'
 import { lastOfArr } from '../utils/common'
@@ -30,6 +31,8 @@ const TabContext = React.createContext<TabContextProps>({
 const TabContextProvider = (props: TabContextProviderProps) => {
   const { children } = props
 
+  const history = useHistory()
+
   const [tabs, setTabs] = React.useState<TabModel[]>([])
   const [tabHistory, setTabHistory] = React.useState<string[]>([])
   const [currentTab, setCurrentTab] = React.useState<TabModel | null>(null)
@@ -49,6 +52,7 @@ const TabContextProvider = (props: TabContextProviderProps) => {
   const activateTab = (id: string | undefined) => {
     if (!id) {
       setCurrentTab(null)
+      history.push('', { idx: tabHistory.length })
       return
     }
 
@@ -58,6 +62,9 @@ const TabContextProvider = (props: TabContextProviderProps) => {
 
     addTabHistory(id)
     setCurrentTab(selectedTab)
+
+    // TODO: 여기서 해도 되나?
+    history.push(selectedTab.info.url)
   }
 
   const addTab = (newTabParam: TabModelParams) => {
