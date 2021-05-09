@@ -6,8 +6,14 @@ const Container = styled.div`
   }
 `
 
-const TabContent: React.FC = () => {
-  return <Container className="tab-content">탭 내용</Container>
+type Props = {
+  children: React.ReactNode
+}
+
+const TabContent: React.FC<Props> = (props: Props) => {
+  const { children } = props
+
+  return <Container className="tab-content">{children}</Container>
 }
 
 export default TabContent
