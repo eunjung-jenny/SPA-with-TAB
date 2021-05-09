@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { TabContextConsumer } from '../../contexts/tab-context'
+import { TabContext, TabContextConsumer } from '../../contexts/tab-context'
 import MyTabPane from '../antd/MyTabPane'
 import MyTabs from '../antd/MyTabs'
 import TabContent from '../tab-content/TabContent'
@@ -20,6 +20,18 @@ const Container = styled.div`
 const Main: React.FC<Props> = (props: Props) => {
   const { style } = props
 
+  const tabContextValue = React.useContext(TabContext)
+
+  const handlePopState = (e: PopStateEvent) => {
+    const url = window.location.pathname.substr(1)
+    console.log(url)
+    tabContextValue.handlePopState(url)(e)
+  }
+
+  React.useEffect(() => {
+    window.addEventListener('popstate', handlePopState)
+  }, [])
+
   return (
     <TabContextConsumer>
       {(context) => {
@@ -28,6 +40,7 @@ const Main: React.FC<Props> = (props: Props) => {
             <MyTabs
               type="card"
               activeKey={context.currentTab?.info.id}
+              // activeKey={tabContextValue.currentTab?.info.id}
               onChange={(activeKey) => context.activateTab(activeKey)}
             >
               {context.tabs.map((tab) => {

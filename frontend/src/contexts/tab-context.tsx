@@ -12,6 +12,7 @@ type TabContextProps = {
   addTab: (newTabParam: TabModelParams) => void
   removeTab: (id: string) => () => void
   activateTab: (id: string) => void
+  handlePopState: (url: string) => (e: PopStateEvent) => void
 }
 
 type TabContextProviderProps = {
@@ -26,6 +27,7 @@ const TabContext = React.createContext<TabContextProps>({
   addTab: (newTabParam: TabModelParams) => {},
   removeTab: (id: string) => () => {},
   activateTab: (id: string) => {},
+  handlePopState: (url: string) => (e: PopStateEvent) => {},
 })
 
 const TabContextProvider = (props: TabContextProviderProps) => {
@@ -44,15 +46,20 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     setTabs(updatedTabs)
   }
 
-  const addTabHistory = (id: string) => {
+  const addTabHistory = (id: string | undefined) => {
+    if (!id) return
     if (lastOfArr(tabHistory) === id) return
     setTabHistory([...tabHistory, id])
+  }
+
+  const addWindowHistory = (id: string | undefined) => {
+    const tab = tabsRef.current.find((tab) => tab.info.id === id)
+    history.push(tab ? tab.info.url : '')
   }
 
   const activateTab = (id: string | undefined) => {
     if (!id) {
       setCurrentTab(null)
-      history.push('', { idx: tabHistory.length })
       return
     }
 
@@ -60,11 +67,12 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     const selectedTab = tabsRef.current.find((tab) => tab.info.id === id)
     if (!selectedTab) return
 
-    addTabHistory(id)
     setCurrentTab(selectedTab)
+  }
 
-    // TODO: 여기서 해도 되나?
-    history.push(selectedTab.info.url)
+  const handlePopState = (url: string) => (e: PopStateEvent) => {
+    const tab = tabsRef.current.find((tab) => tab.info.url === url)
+    activateTab(tab?.info.id)
   }
 
   const addTab = (newTabParam: TabModelParams) => {
@@ -81,6 +89,8 @@ const TabContextProvider = (props: TabContextProviderProps) => {
       const newTab = new TabModel(newTabParam)
       updateTabs([...tabsRef.current, newTab])
       activateTab(newTab.info.id)
+      addTabHistory(newTab.info.id)
+      addWindowHistory(newTab.info.id)
     }
   }
 
@@ -98,8 +108,10 @@ const TabContextProvider = (props: TabContextProviderProps) => {
 
   const removeTab = (id: string) => () => {
     updateTabs(tabsRef.current.filter((tab) => tab.info.id !== id))
-    // currentTab 업데이트, tabHistory 업데이트
-    activateTab(getPreviousTabId(id))
+    const previousTabId = getPreviousTabId(id)
+    activateTab(previousTabId)
+    addTabHistory(previousTabId)
+    addWindowHistory(previousTabId)
   }
 
   return (
@@ -111,6 +123,7 @@ const TabContextProvider = (props: TabContextProviderProps) => {
         addTab,
         removeTab,
         activateTab,
+        handlePopState,
       }}
     >
       {children}
