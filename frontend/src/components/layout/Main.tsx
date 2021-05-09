@@ -40,7 +40,7 @@ const Main: React.FC<Props> = (props: Props) => {
               type="card"
               activeKey={context.currentTab?.info.id}
               // activeKey={tabContextValue.currentTab?.info.id}
-              onChange={(activeKey) => context.activateTab(activeKey)}
+              onChange={(activeKey) => context.handleTabTitleClick(activeKey)}
             >
               {context.tabs.map((tab) => {
                 return (

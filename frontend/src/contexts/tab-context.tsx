@@ -11,7 +11,7 @@ type TabContextProps = {
 
   addTab: (newTabParam: TabModelParams) => void
   removeTab: (id: string) => () => void
-  activateTab: (id: string) => void
+  handleTabTitleClick: (id: string) => void
   handlePopState: (url: string) => (e: PopStateEvent) => void
 }
 
@@ -26,7 +26,7 @@ const TabContext = React.createContext<TabContextProps>({
 
   addTab: (newTabParam: TabModelParams) => {},
   removeTab: (id: string) => () => {},
-  activateTab: (id: string) => {},
+  handleTabTitleClick: (id: string) => {},
   handlePopState: (url: string) => (e: PopStateEvent) => {},
 })
 
@@ -114,6 +114,11 @@ const TabContextProvider = (props: TabContextProviderProps) => {
     addHistory(previousTabId)
   }
 
+  const handleTabTitleClick = (id: string) => {
+    activateTab(id)
+    addHistory(id)
+  }
+
   return (
     <TabContext.Provider
       value={{
@@ -122,7 +127,8 @@ const TabContextProvider = (props: TabContextProviderProps) => {
         currentTab,
         addTab,
         removeTab,
-        activateTab,
+        // activateTab,
+        handleTabTitleClick,
         handlePopState,
       }}
     >
